@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check your typing speed with ProTypist's free online typing test. Improve your WPM, practice touch typing, and get an instant certificate. Start now!">
+    <meta name="keywords" content="free typing test, typing speed test, WPM test, online typing practice, number pad practice, data entry typing test, touch typing, ProTypist">
+    <title>ProTypist | Advanced Typing Platform</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- Colors & Variables --- */
+        :root {
+            --primary: #007bff; 
+            --secondary: #6c757d; 
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-main: #333333; 
+            --text-untyped: #999999; 
+            --correct: #28a745; 
+            --incorrect: #dc3545; 
+            --current-bg: rgba(0, 123, 255, 0.1);
+            --box-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Poppins%22%20font-size%3D%2224%22%20font-weight%3D%22bold%22%20fill%3D%22%23000%22%20opacity%3D%220.04%22%20transform%3D%22rotate(-45%20100%20100)%22%20text-anchor%3D%22middle%22%3EProTypist%3C%2Ftext%3E%3C%2Fsvg%3E");
+            background-repeat: repeat;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            width: 100%; height: 80px; padding: 0 50px; box-sizing: border-box;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid var(--glass-border);
+            z-index: 100; backdrop-filter: blur(10px); position: fixed; top: 0;
+            white-space: nowrap; 
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+        .nav-links { display: flex; gap: 30px; align-items: center; white-space: nowrap; }
+        
+        .nav-links a { 
+            text-decoration: none; color: var(--text-main); font-weight: 600; 
+            font-size: 1rem; transition: color 0.3s; text-transform: uppercase; 
+            letter-spacing: 1px; cursor: pointer; position: relative; 
+            white-space: nowrap; 
+        }
+        .nav-links a::after { 
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; 
+            left: 0; background-color: var(--primary); transition: width 0.3s; 
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Language Selector Style */
+        .lang-wrapper {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .lang-label {
+            font-size: 0.75rem; 
+            font-weight: 300; /* Light Thin Font */
+            color: var(--secondary); 
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+        }
+        .lang-select {
+            padding: 5px 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            background: white;
+            color: var(--primary);
+            outline: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            white-space: nowrap; 
+        }
+
+        /* --- HOME SECTION --- */
+        #home-section { margin-top: 120px; padding: 20px 5%; display: block; text-align: center; }
+        
+        .hero-container { 
+            max-width: 900px; margin: 0 auto 60px auto; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
+        
+        .hero-text { text-align: center; }
+        .hero-title { font-size: 3.5rem; margin-bottom: 15px; color: #333; line-height: 1.2; font-weight: 700; }
+        .hero-desc { font-size: 1.2rem; color: #666; margin-bottom: 30px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto; }
+        
+        .cta-button { 
+            padding: 15px 50px; font-size: 1.3rem; background: var(--primary); 
+            color: white; border: none; border-radius: 50px; cursor: pointer; 
+            transition: 0.3s; font-weight: bold; box-shadow: 0 10px 20px rgba(0,123,255,0.3); 
+        }
+        .cta-button:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0,123,255,0.4); }
+
+        /* --- FEATURES GRID --- */
+        .features-grid { 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px; 
+            row-gap: 80px; 
+            max-width: 1200px;
+            margin: 0 auto 80px auto;
+            padding: 0 40px;
+        }
+        
+        .feature-card { 
+            background: white; 
+            padding: 30px 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
+            text-align: center; 
+            border-top: 5px solid var(--primary); 
+            transition: transform 0.3s; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-card h3 { color: #333; margin-top: 0; font-size: 1.4rem; margin-bottom: 10px; font-weight: 700; }
+        .feature-card p { font-size: 1rem; color: #666; line-height: 1.6; margin-bottom: 15px; }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: 0.2s;
+            align-self: center;
+        }
+        .read-more-btn:hover { background: rgba(0,123,255,0.1); text-decoration: underline; }
+
+        /* --- SEO CONTENT SECTION --- */
+        .seo-content-section {
+            max-width: 1200px;
+            margin: 0 auto 80px auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: left;
+        }
+
+        .desc-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .desc-card:hover {
+            transform: translateY(-5px);
+            border-top-color: var(--primary);
+        }
+
+        /* HEADER AUTO FIT STYLES */
+        .desc-card h2 {
+            color: var(--primary);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Automatically resizes to fit container */
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        .desc-card > p {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .desc-card ul {
+            padding-left: 20px;
+            list-style-type: none;
+        }
+
+        .desc-card li {
+            margin-bottom: 15px;
+            color: #444;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .desc-card li::before {
+            content: '✓';
+            color: var(--correct);
+            font-weight: bold;
+            position: absolute;
+            left: -25px;
+            top: 2px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .features-grid { grid-template-columns: 1fr; gap: 25px; row-gap: 30px; padding: 0 20px;}
+            .seo-content-section { grid-template-columns: 1fr; padding: 0 20px; }
+            .nav-links { display: none; } 
+            .logo { font-size: 1.5rem; }
+            .hero-title { font-size: 2.5rem; }
+            .info-content { width: 90%; padding: 20px; }
+            .desc-card { padding: 25px; }
+        }
+
+        /* --- OTHER SECTIONS ... --- */
+        #info-modal, #selection-modal, #result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .info-content, .modal-content, .result-box { background: white; padding: 40px; border-radius: 20px; text-align: left; animation: popUp 0.3s ease-out; position: relative; }
+        .info-content { width: 600px; max-width: 90%; border-top: 6px solid var(--primary); }
+        .modal-content { width: 500px; text-align: center; }
+        .result-box { width: 450px; text-align: center; border: 2px solid var(--primary); }
+        
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #999; }
+        .info-content h2 { color: var(--primary); margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .info-content p { color: #444; line-height: 1.8; font-size: 1.05rem; margin-top: 20px; }
+        
+        .modal-btns { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
+        .choice-btn { flex: 1; padding: 20px; border-radius: 15px; border: 2px solid #eee; cursor: pointer; transition: 0.3s; background: #fff; display: flex; flex-direction: column; align-items: center; }
+        .choice-btn:hover { border-color: var(--primary); background: rgba(0,123,255,0.05); transform: translateY(-5px); }
+        .choice-btn h3 { margin: 10px 0 5px; color: var(--primary); }
+        .choice-btn img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 10px; }
+
+        .container { display: none; position: relative; margin-top: 140px; margin-bottom: 50px; width: 90%; max-width: 900px; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.08); z-index: 5; align-self: center; }
+
+        #leaderboard-section { display: none; margin-top: 140px; width: 90%; max-width: 800px; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); align-self: center; margin-bottom: 50px; }
+        .lb-title { font-size: 2.5rem; color: var(--primary); text-align: center; margin-bottom: 30px; }
+        .lb-table { width: 100%; border-collapse: collapse; }
+        .lb-table th { background: var(--primary); color: white; padding: 15px; text-align: left; border-radius: 8px 8px 0 0; }
+        .lb-table td { padding: 15px; border-bottom: 1px solid #eee; color: #333; font-size: 1.1rem; }
+        .lb-table tr:hover { background-color: #f9f9f9; }
+        .empty-msg { text-align: center; color: #999; font-style: italic; margin-top: 20px; }
+
+        .settings-area { display: flex; flex-direction: row; justify-content: center; align-items: flex-end; gap: 30px; margin-bottom: 35px; padding: 0 20px; flex-wrap: wrap; }
+        .control-group { display: flex; flex-direction: column; text-align: left; flex: 1; min-width: 200px; }
+        label { font-size: 0.85rem; color: var(--secondary); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; margin-left: 5px; }
+        select { appearance: none; -webkit-appearance: none; padding: 15px 25px; font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; background-color: white; border: 2px solid #e0e0e0; color: #333; border-radius: 15px; outline: none; cursor: pointer; width: 100%; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        
+        #text-wrapper { position: relative; background: var(--box-bg); border-radius: 16px; border: 2px solid #edf2f7; margin-bottom: 25px; height: 80px; overflow: hidden; padding: 0 30px; display: flex; align-items: center; white-space: nowrap; box-shadow: inset 0 2px 10px rgba(0,0,0,0.03); }
+        #text-display { font-family: 'Fira Code', monospace; font-size: 1.8rem; line-height: 80px; color: var(--text-untyped); user-select: none; display: inline-block; word-spacing: -6px; letter-spacing: -1px; }
+        .char-correct { color: var(--correct); font-weight: bold; }
+        .char-incorrect { color: var(--incorrect); text-decoration: underline; text-decoration-color: var(--incorrect); background: #fff0f0; border-radius: 4px; }
+        .char-current { background-color: var(--current-bg); border-bottom: 3px solid var(--primary); color: #000; border-radius: 2px; }
+
+        #input-field { width: 100%; height: 120px; padding: 20px; font-size: 1.4rem; background: var(--box-bg); border: 2px solid #e0e0e0; color: #333; border-radius: 16px; outline: none; transition: all 0.3s ease; box-sizing: border-box; font-family: 'Fira Code', monospace; resize: none; word-spacing: -6px; letter-spacing: -1px; }
+        
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; margin-top: 35px; }
+        .stat-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #edf2f7; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: transform 0.3s; }
+        .stat-card span { font-size: 2.2rem; font-weight: 700; color: #333; display: block; margin-top: 5px; }
+        .stat-card small { color: #888; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* General Buttons */
+        button { cursor: pointer; }
+        .btn-restart, .btn-close-info { padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+        .btn-cert { padding: 12px 30px; background: var(--primary); color: white; border: none; border-radius: 50px; font-weight: bold; width: 100%; font-size: 1rem; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
+        .btn-reset { margin-top: 40px; padding: 16px 60px; background: #333; color: white; border: none; border-radius: 50px; font-weight: 600; font-size: 1rem; transition: 0.3s; }
+
+        /* Footer */
+        footer { width: 100%; background: rgba(255, 255, 255, 0.95); border-top: 1px solid var(--glass-border); padding-top: 40px; backdrop-filter: blur(10px); z-index: 10; margin-top: auto; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; padding: 0 20px; gap: 30px; }
+        .footer-section { flex: 1; min-width: 250px; text-align: left; }
+        .footer-section h3 { color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 10px; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section li { margin-bottom: 12px; font-size: 0.95rem; color: #555; position: relative; padding-left: 20px; line-height: 1.5; }
+        .footer-section li::before { content: "•"; color: var(--primary); position: absolute; left: 0; font-size: 1.2rem; }
+        .footer-bottom { margin-top: 40px; padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; font-size: 0.9rem; color: #777; background: rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="showHome()"><img src="/logo_image.png" alt="ProTypist Logo" style="height: 70px; vertical-align: middle; margin-right: 10px; border-radius: 7px; border-color: red;">ProTypist</div>
+        <div class="nav-links">
+            <a onclick="showHome()">Home</a>
+            <a onclick="switchToTest('text')">Typing Test</a>
+            <a onclick="switchToTest('numbers')">Number Practice</a>
+            <a onclick="showLeaderboard()">Leaderboard</a>
+            <div class="lang-wrapper">
+                <span class="lang-label">Select your language</span>
+                <select id="lang-selector" class="lang-select" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <div id="home-section">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1 class="hero-title">Master Your <br> <span style="color:var(--primary)">Typing Skills</span></h1>
+                <p class="hero-desc">
+                    ProTypist is the ultimate platform to improve your typing speed. 
+                    Practice with our <strong>Numbers Mode</strong> and get certified instantly!
+                </p>
+                <button class="cta-button" onclick="openSelectionModal()">Start Typing Test ⚡</button>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🚀 Speed Test</h3>
+                <p>Track your Words Per Minute (WPM) in real-time with precision...</p>
+                <button class="read-more-btn" onclick="showFeature('speed')">Read More ➝</button>
+            </div>
+            <div class="feature-card">
+                <h3>🔢 Numbers Mode</h3>
+                <p>Specialized practice for data entry and accounting jobs...</p>
+                <button class="read-more-btn" onclick="showFeature('numbers')">Read More ➝</button>
+            </div>
+            <div class="feature-card">
+                <h3>👶 Kids Mastery</h3>
+                <p>Visual keyboard guides to help kids type without looking down...</p>
+                <button class="read-more-btn" onclick="showFeature('kids')">Read More ➝</button>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Accuracy First</h3>
+                <p>Focus on hitting the right keys. Precision is the key to true speed...</p>
+                <button class="read-more-btn" onclick="showFeature('accuracy')">Read More ➝</button>
+            </div>
+            <div class="feature-card">
+                <h3>⌨️ Touch Typing</h3>
+                <p>Learn the art of typing without looking at the keyboard layout...</p>
+                <button class="read-more-btn" onclick="showFeature('touch')">Read More ➝</button>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Live Analytics</h3>
+                <p>Get immediate feedback on your mistakes and typing rhythm...</p>
+                <button class="read-more-btn" onclick="showFeature('analytics')">Read More ➝</button>
+            </div>
+        </div>
+
+        <div class="seo-content-section" id="dynamic-seo-content">
+            <div class="desc-card">
+                <h2>⌨️ Typing Test</h2>
+                <p>Designed to help you master letters and words, elevating your typing speed to a professional level.</p>
+                <ul>
+                    <li><b>Real-time WPM Tracking:</b> The timer starts automatically as soon as you begin typing. Watch your Words Per Minute (WPM) update live on the screen.</li>
+                    <li><b>Focus on Accuracy:</b> Speed is important, but accuracy is key. Every mistake is highlighted in red, allowing our system to calculate your exact accuracy percentage.</li>
+                    <li><b>For All Skill Levels:</b> Whether you are a beginner looking for basic words, an intermediate typist practicing complex vocabulary, or a programmer needing specific keywords, we have you covered.</li>
+                    <li><b>Build Muscle Memory:</b> Regular practice with this test helps you develop 'Touch Typing' techniques, allowing you to type effortlessly without looking down.</li>
+                </ul>
+            </div>
+            <div class="desc-card">
+                <h2>🔢 Number Practice</h2>
+                <p>A specialized mode designed to help you operate the Number Pad (Numpad) quickly and flawlessly.</p>
+                <ul>
+                    <li><b>Data Entry & Accounting Focus:</b> Numpad speed is crucial for users preparing for banking, accounting, and data entry jobs. We designed this mode specifically to enhance those essential skills.</li>
+                    <li><b>Diverse Data Formats:</b> Don't just practice plain numbers. Train with real-world data formats like phone numbers, dates, currency values, and percentages.</li>
+                    <li><b>Step-by-Step Training:</b> Progress through Easy, Medium, and Hard levels. Start with simple single digits and steadily build your speed up to complex inputs.</li>
+                    <li><b>Time Management:</b> Learn how to enter large amounts of numerical data in a short time, giving you a significant edge in competitive exams and real tasks.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-modal">
+        <div class="info-content">
+            <span class="modal-close" onclick="closeInfoModal()">&times;</span>
+            <h2 id="info-title">Feature Title</h2>
+            <p id="info-desc">Feature Description...</p>
+            <button class="btn-close-info" onclick="closeInfoModal()">Close</button>
+        </div>
+    </div>
+
+    <div id="selection-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeSelectionModal()">&times;</span>
+            <h2 style="color:var(--primary)">Choose Your Test</h2>
+            <p style="color:#666">Select the type of practice you want to start.</p>
+            <div class="modal-btns">
+                <div class="choice-btn" onclick="confirmTest('text')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2921/2921226.png" alt="Text">
+                    <h3>Typing Test</h3>
+                    <small>Letters & Words</small>
+                </div>
+                <div class="choice-btn" onclick="confirmTest('numbers')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/806/806655.png" alt="Numbers">
+                    <h3>Number Test</h3>
+                    <small>Digits & Data</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboard-section">
+        <h2 class="lb-title">🏆 Top Performers 🏆</h2>
+        <table class="lb-table">
+            <thead><tr><th>Rank</th><th>Name</th><th>Speed (WPM)</th><th>Accuracy</th><th>Date</th></tr></thead>
+            <tbody id="lb-body"></tbody>
+        </table>
+        <div id="lb-empty" class="empty-msg">No scores yet. Complete a test to get on the board!</div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-restart" onclick="showHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <div class="container" id="test-container">
+        <div class="settings-area">
+            <div class="control-group">
+                <label>⏱️ Duration</label>
+                <select id="time-limit" onchange="resetGame()">
+                    <option value="60">1 Minute</option>
+                    <option value="120">2 Minutes</option>
+                    <option value="300">5 Minutes</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>🔥 Typing Mode</label>
+                <select id="lesson-type" onchange="resetGame()"></select>
+            </div>
+        </div>
+
+        <div id="text-wrapper"><div id="text-display"></div></div>
+        <textarea id="input-field" placeholder="Type here... (Words lock after space)" autocomplete="off"></textarea>
+
+        <div class="stats-row">
+            <div class="stat-card"> <small>SPEED</small> <span id="wpm">0</span> </div>
+            <div class="stat-card"> <small>ACCURACY</small> <span id="accuracy">100%</span> </div>
+            <div class="stat-card"> <small>TIME LEFT</small> <span id="timer">60s</span> </div>
+        </div>
+        <button class="btn-reset" onclick="resetGame()">RESET TEST</button>
+    </div>
+
+    <canvas id="certCanvas" width="800" height="600" style="display: none;"></canvas>
+
+    <footer id="main-footer">
+        <div id="footer-details">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><b>ProTypist</b> is a state-of-the-art typing platform. We aim to increase users' speed and accuracy.</li>
+                        <li>We offer not just letters, but also special modes for number pad practice.</li>
+                        <li>This is the best platform for students, data entry operators, and professionals to enhance their skills.</li>
+                        <li>We provide every user the opportunity to get an instant certificate in recognition of their talent.</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>📧 <b>Email:</b> support@toolstations.in</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Privacy Policy</h3>
+                    <ul>
+                        <li><b>Data Security:</b> We do not save your personal data or typing history on our servers.</li>
+                        <li><b>Local Processing:</b> Everything is processed within your browser, ensuring your privacy is never compromised.</li>
+                        <li><b>Cookies:</b> We only use minimal cookies to improve website performance.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 ProTypist. Designed & Developed by <b>Bhukya Raghu</b>. All Rights Reserved.
+        </div>
+    </footer>
+
+    <div id="result-overlay">
+        <div class="result-box">
+            <div class="result-title">Time's Up!</div>
+            <div class="result-msg">🎉 Congratulations! You smashed it! 🎉</div>
+            <div class="result-item">WPM: <b id="res-wpm">0</b></div>
+            <div class="result-item">Accuracy: <b id="res-acc">0%</b></div>
+            <div class="cert-input-area">
+                <label style="display:block; margin-bottom:5px; text-align:center;">Get Your Certificate & Save Score</label>
+                <input type="text" id="cert-name" placeholder="Enter Your Name">
+                <button class="btn-cert" onclick="downloadCertificate()">Download Certificate 🏅</button>
+            </div>
+            <button class="btn-restart" onclick="closeResults()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // --- ENSURE DEFAULT LANGUAGE & ESC KEY LISTENER ---
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("lang-selector").value = "en";
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" || event.keyCode === 27) {
+                if (document.getElementById('info-modal').style.display === 'flex') {
+                    closeInfoModal();
+                }
+                if (document.getElementById('selection-modal').style.display === 'flex') {
+                    closeSelectionModal();
+                }
+            }
+        });
+
+        // --- MULTI-LANGUAGE SCRIPT FOR SEO SECTION ---
+        const seoTranslations = {
+            en: `
+                <div class="desc-card">
+                    <h2>⌨️ Typing Test</h2>
+                    <p>Designed to help you master letters and words, elevating your typing speed to a professional level.</p>
+                    <ul>
+                        <li><b>Real-time WPM Tracking:</b> The timer starts automatically as soon as you begin typing. Watch your Words Per Minute (WPM) update live on the screen.</li>
+                        <li><b>Focus on Accuracy:</b> Speed is important, but accuracy is key. Every mistake is highlighted in red, allowing our system to calculate your exact accuracy percentage.</li>
+                        <li><b>For All Skill Levels:</b> Whether you are a beginner looking for basic words, an intermediate typist practicing complex vocabulary, or a programmer needing specific keywords, we have you covered.</li>
+                        <li><b>Build Muscle Memory:</b> Regular practice with this test helps you develop 'Touch Typing' techniques, allowing you to type effortlessly without looking down.</li>
+                    </ul>
+                </div>
+                <div class="desc-card">
+                    <h2>🔢 Number Practice</h2>
+                    <p>A specialized mode designed to help you operate the Number Pad (Numpad) quickly and flawlessly.</p>
+                    <ul>
+                        <li><b>Data Entry & Accounting Focus:</b> Numpad speed is crucial for users preparing for banking, accounting, and data entry jobs. We designed this mode specifically to enhance those essential skills.</li>
+                        <li><b>Diverse Data Formats:</b> Don't just practice plain numbers. Train with real-world data formats like phone numbers, dates, currency values, and percentages.</li>
+                        <li><b>Step-by-Step Training:</b> Progress through Easy, Medium, and Hard levels. Start with simple single digits and steadily build your speed up to complex inputs.</li>
+                        <li><b>Time Management:</b> Learn how to enter large amounts of numerical data in a short time, giving you a significant edge in competitive exams and real tasks.</li>
+                    </ul>
+                </div>
+            `,
+            te: `
+                <div class="desc-card">
+                    <h2>⌨️ Typing Test (టైపింగ్ టెస్ట్)</h2>
+                    <p>అక్షరాలు మరియు పదాల (Letters & Words) మీద పట్టు సాధించి, మీ టైపింగ్ వేగాన్ని ప్రొఫెషనల్ స్థాయిలో పెంచుకోవడానికి ఈ ఆప్షన్ రూపొందించబడింది.</p>
+                    <ul>
+                        <li><b>రియల్-టైమ్ WPM ట్రాకింగ్:</b> మీరు టైప్ చేయడం మొదలుపెట్టగానే ఆటోమెటిక్ గా టైమర్ స్టార్ట్ అవుతుంది. నిమిషానికి మీరు ఎన్ని పదాలు తప్పులు లేకుండా టైప్ చేస్తున్నారో (WPM) లైవ్ రిజల్ట్ స్క్రీన్ మీద కనిపిస్తుంది.</li>
+                        <li><b>ఖచ్చితత్వానికి ప్రాధాన్యం:</b> టైపింగ్ లో వేగం ఎంత ముఖ్యమో, ఖచ్చితత్వం కూడా అంతే ముఖ్యం. మీరు చేసే ప్రతి తప్పును ఎర్ర రంగులో హైలైట్ చేసి, మీ అక్యూరసీ శాతాన్ని కచ్చితంగా లెక్కగడుతుంది.</li>
+                        <li><b>అన్ని స్థాయిల వారికి అనుకూలం:</b> కొత్తగా నేర్చుకునే వారికోసం బేసిక్ పదాలు, కాస్త అనుభవం ఉన్నవారి కోసం కఠినమైన ఆంగ్ల పదాలు, ప్రోగ్రామర్స్ కోసం ప్రత్యేకమైన కీవర్డ్స్ ఇందులో పొందుపరిచాము.</li>
+                        <li><b>మజిల్ మెమరీ (Muscle Memory):</b> కీబోర్డ్ వైపు పదే పదే చూడకుండా స్పీడ్ గా టైప్ చేసే 'టచ్ టైపింగ్' పద్ధతిని డెవలప్ చేసుకోవడానికి ఈ టెస్ట్ ను రోజూ ప్రాక్టీస్ చేయడం ఎంతో ముఖ్యం.</li>
+                    </ul>
+                </div>
+                <div class="desc-card">
+                    <h2>🔢 Number Practice (నంబర్ ప్రాక్టీస్)</h2>
+                    <p>కీబోర్డ్ కు కుడి వైపున ఉండే నంబర్ ప్యాడ్ (Numpad) ని వేగంగా, తప్పులు లేకుండా ఆపరేట్ చేయడానికి ఈ ప్రత్యేకమైన ఆప్షన్ ఎంతగానో ఉపయోగపడుతుంది.</p>
+                    <ul>
+                        <li><b>డేటా ఎంట్రీ & అకౌంటింగ్ ఫోకస్:</b> బ్యాంకింగ్, అకౌంటింగ్, మరియు డేటా ఎంట్రీ ఆపరేటర్ ఉద్యోగాలకు ప్రిపేర్ అయ్యే యూజర్లకు నంబర్ టైపింగ్ స్పీడ్ చాలా కీలకం. వారి నైపుణ్యాలను మెరుగుపరచడానికే ఈ మోడ్ ను డిజైన్ చేశాము.</li>
+                        <li><b>వివిధ రకాల ఫార్మాట్స్:</b> కేవలం మామూలు నంబర్స్ మాత్రమే కాకుండా ఫోన్ నంబర్లు (987-654-3210), తేదీలు, కరెన్సీ విలువలు మరియు శాతాలు లాంటి రియల్-వరల్డ్ డేటాతో మీరు ప్రాక్టీస్ చేయవచ్చు.</li>
+                        <li><b>దశల వారీగా శిక్షణ:</b> ఇందులో Easy, Medium మరియు Hard అనే మూడు లెవెల్స్ ఉంటాయి. సులభమైన సింగిల్ డిజిట్స్ తో మొదలుపెట్టి, సంక్లిష్టమైన ఐపీ అడ్రస్‌ల వరకు స్పీడ్ పెంచుకోవచ్చు.</li>
+                        <li><b>సమయపాలన (Time Management):</b> కాంపిటేటివ్ ఎగ్జామ్స్ లో తక్కువ సమయంలో ఎక్కువ నంబర్ డేటాను ఎలా ఎంటర్ చేయాలో ఈ నంబర్ ప్రాక్టీస్ మీకు నేర్పిస్తుంది.</li>
+                    </ul>
+                </div>
+            `,
+            hi: `
+                <div class="desc-card">
+                    <h2>⌨️ Typing Test (टाइपिंग टेस्ट)</h2>
+                    <p>अक्षर और शब्दों पर अपनी पकड़ बनाकर, अपनी टाइपिंग स्पीड को प्रोफेशनल स्तर तक बढ़ाने के लिए इसे डिज़ाइन किया गया है।</p>
+                    <ul>
+                        <li><b>रियल-टाइम WPM ट्रैकिंग:</b> टाइप करना शुरू करते ही टाइमर अपने आप शुरू हो जाता है। आप बिना गलती के 1 मिनट में कितने शब्द टाइप करते हैं (WPM), यह स्क्रीन पर लाइव दिखाई देता है।</li>
+                        <li><b>सटीकता पर ध्यान:</b> टाइपिंग में स्पीड जितनी जरूरी है, सटीकता (Accuracy) भी उतनी ही महत्वपूर्ण है। हर गलती को लाल रंग में हाईलाइट किया जाता है ताकि आप अपनी सटीकता जान सकें।</li>
+                        <li><b>सभी स्तरों के लिए उपयुक्त:</b> शुरुआती लोगों के लिए बेसिक शब्द, अनुभवियों के लिए कठिन शब्द और प्रोग्रामर्स के लिए विशेष कीवर्ड इसमें शामिल किए गए हैं।</li>
+                        <li><b>मसल मेमोरी (Muscle Memory):</b> कीबोर्ड की तरफ देखे बिना टाइप करने की 'टच टाइपिंग' तकनीक को विकसित करने के लिए रोज़ाना इसका अभ्यास करना बहुत फायदेमंद है।</li>
+                    </ul>
+                </div>
+                <div class="desc-card">
+                    <h2>🔢 Number Practice (नंबर प्रैक्टिस)</h2>
+                    <p>कीबोर्ड के दाईं ओर मौजूद नंबर पैड (Numpad) को तेज़ी से और बिना गलती के इस्तेमाल करने के लिए यह विकल्प बहुत मददगार है।</p>
+                    <ul>
+                        <li><b>डेटा एंट्री और अकाउंटिंग फोकस:</b> बैंकिंग और डेटा एंट्री जॉब्स की तैयारी कर रहे यूज़र्स के लिए यह नंबर टाइपिंग मोड विशेष रूप से डिज़ाइन किया गया है।</li>
+                        <li><b>विभिन्न डेटा फॉर्मेट्स:</b> सिर्फ नंबर ही नहीं, बल्कि फोन नंबर, तारीख, करेंसी और प्रतिशत जैसे रियल-वर्ल्ड डेटा के साथ प्रैक्टिस करें।</li>
+                        <li><b>स्टेप-बाय-स्टेप ट्रेनिंग:</b> इसमें Easy, Medium और Hard लेवल हैं। सिंगल डिजिट से शुरू करके कठिन IP एड्रेस तक स्पीड बढ़ाएं।</li>
+                        <li><b>समय प्रबंधन (Time Management):</b> कम समय में ज्यादा नंबर डेटा कैसे एंटर करें, यह मोड आपको यही सिखाता है जो परीक्षा में आपकी बहुत मदद करेगा।</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function changeLanguage() {
+            const selectedLang = document.getElementById("lang-selector").value;
+            const contentContainer = document.getElementById("dynamic-seo-content");
+            
+            contentContainer.style.opacity = 0;
+            setTimeout(() => {
+                contentContainer.innerHTML = seoTranslations[selectedLang];
+                contentContainer.style.transition = "opacity 0.4s ease";
+                contentContainer.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- DATA BANKS ---
+        const wordBanks = {
+            lesson_home: ["asdfg", "hjkl;", "asdf", "jkl;", "gfdsa", "lkjh", "fads", "jl;", "dad", "sad", "lad", "had", "ask", "all", "fall", "glass", "jag", "ask", "salad", "flash", "sash", "flask", "hash"],
+            lesson_top: ["qwerty", "uiop", "qwer", "poiu", "trewq", "yuiop", "quit", "top", "pot", "root", "tree", "were", "you", "too", "put", "type", "worry", "quiet", "power", "outer", "route", "write", "tour"],
+            lesson_bot: ["zxcvb", "nm,.", "zxc", "bnm", "bvcxz", "mnb", "zoo", "van", "man", "ban", "can", "cab", "zinc", "vim", "mix", "back", "black", "zone", "zero", "moon", "bomb", "comb", "zen"],
+            normal: ["the", "be", "to", "of", "and", "a", "in", "that", "have", "I", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come", "its", "over", "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", "way", "even", "new", "want", "because", "any", "these", "give", "day", "most", "us", "time", "person", "year", "way", "day", "thing", "man", "world", "life", "hand", "part", "child", "eye", "woman", "place", "work", "week", "case", "point", "government", "company", "number", "group", "problem", "fact"],
+            medium: ["absolute", "abstract", "academic", "accepted", "accident", "accuracy", "accurate", "achieved", "acquired", "activity", "actually", "addition", "adequate", "adjacent", "adjusted", "advanced", "advisory", "advocate", "affected", "aircraft", "alliance", "although", "aluminum", "analysis", "announce", "anything", "anywhere", "apparent", "appendix", "approach", "approval", "argument", "artistic", "assembly", "assuming", "athletic", "attached", "attitude", "attorney", "audience", "autonomy", "aviation", "bachelor", "bacteria", "baseball", "bathroom", "becoming", "behavior", "birthday", "boundary", "breaking", "breeding", "building", "bulletin", "business", "calendar", "campaign", "capacity", "casualty", "catching", "category", "Catholic", "causeway", "cellular", "ceremony", "chairman", "champion", "chemical", "children", "circular", "civilian", "clearing", "clinical", "clothing", "collapse", "colonial", "colorful", "combined", "comeback", "comedy", "comfort", "command", "comment"],
+            pro: ["const", "let", "var", "function", "return", "if", "else", "switch", "case", "break", "continue", "while", "do", "for", "foreach", "in", "of", "try", "catch", "finally", "throw", "class", "extends", "super", "this", "new", "import", "export", "default", "async", "await", "null", "undefined", "true", "false", "NaN", "Infinity", "typeof", "instanceof", "void", "delete", "console.log()", "document.getElementById", "window.addEventListener", "JSON.stringify", "JSON.parse", "map", "filter", "reduce", "find", "includes", "join", "split", "slice", "splice", "push", "pop", "shift", "unshift"],
+            num_easy: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "15", "20", "25", "30", "40", "50", "60", "70", "80", "90", "99", "100", "01", "05", "11", "22", "33", "44", "55", "66", "77", "88", "123", "321", "456", "789", "000"],
+            num_medium: ["2024", "1999", "2025", "5000", "1234", "4321", "5678", "9000", "1010", "2020", "3030", "4040", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "10.5", "99.9", "3.14", "100%", "50%", "25%", "12-12", "01-01", "12345", "67890", "54321"],
+            num_hard: ["987654321", "123456789", "3.14159265", "192.168.0.1", "10.0.0.1", "$1,000.00", "$9,999.99", "987-654-3210", "123-456-7890", "11223344", "99887766", "2024-02-12", "01/01/2000", "100,000", "1,000,000", "#123456", "+91-98765", "12:00:00", "23:59:59", "70%", "85.5%"]
+        };
+
+        const featureDetails = {
+            speed: { title: "🚀 Speed Test & WPM Analysis", desc: "Our advanced Speed Test engine calculates your Words Per Minute (WPM) in real-time. Unlike standard tests, we account for keystroke latency and provide a 'True Speed' score." },
+            numbers: { title: "🔢 Numbers Mode Mastery", desc: "Data entry jobs require proficient use of the Number Pad (Numpad). Our specialized Numbers Mode generates random sequences of digits, dates, and currency formats." },
+            kids: { title: "👶 Kids Zone - Future Ready", desc: "This mode is specially designed for young children and beginners starting to type. It shows a keyboard guide on the screen, so kids can learn which finger to use for which key by looking at the monitor instead of looking down at the keyboard. This improves their 'Muscle Memory'." },
+            cert: { title: "🏆 Verified Certificates", desc: "Upon completing a test with high accuracy, ProTypist generates a personalized, downloadable certificate. Use this on your LinkedIn or Resume." },
+            accuracy: { title: "🎯 Accuracy First Approach", desc: "Many typists focus only on speed, leading to bad habits. Our 'Accuracy First' algorithm penalizes mistakes heavily, forcing you to slow down and type correctly." },
+            touch: { title: "⌨️ Touch Typing Techniques", desc: "Touch typing is the ability to type without looking at the keyboard. Our platform uses unique word patterns that train your muscle memory." },
+            analytics: { title: "📊 Live Analytics & Feedback", desc: "Don't just type blindly. Our Live Analytics engine tracks which keys you miss the most and adjusts future lessons to help you practice those specific letters." }
+        };
+
+        function showFeature(key) {
+            const data = featureDetails[key];
+            if(data) {
+                document.getElementById('info-title').innerText = data.title;
+                document.getElementById('info-desc').innerText = data.desc;
+                document.getElementById('info-modal').style.display = 'flex';
+            }
+        }
+        function closeInfoModal() { document.getElementById('info-modal').style.display = 'none'; }
+
+        // GAME LOGIC
+        let timeLeft, timer = null, isStarted = false, activeText = "", lockedLength = 0, wordQueue = [];
+        const display = document.getElementById('text-display'), input = document.getElementById('input-field'), timerEl = document.getElementById('timer'), wpmEl = document.getElementById('wpm'), accEl = document.getElementById('accuracy'), timeSelect = document.getElementById('time-limit'), lessonSelect = document.getElementById('lesson-type'), resultOverlay = document.getElementById('result-overlay'), resWpm = document.getElementById('res-wpm'), resAcc = document.getElementById('res-acc'), mainFooter = document.getElementById('main-footer');
+
+        function showHome() { document.getElementById('home-section').style.display = 'block'; mainFooter.style.display = 'block'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; }
+        function showLeaderboard() { document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'block'; renderLeaderboard(); }
+        function openSelectionModal() { document.getElementById('selection-modal').style.display = 'flex'; }
+        function closeSelectionModal() { document.getElementById('selection-modal').style.display = 'none'; }
+        function confirmTest(type) { closeSelectionModal(); switchToTest(type); }
+
+        function switchToTest(category) {
+            document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; document.getElementById('test-container').style.display = 'block';
+            if (category === 'numbers') {
+                lessonSelect.innerHTML = `<option value="num_easy">EASY NUMBERS</option><option value="num_medium">MEDIUM NUMBERS</option><option value="num_hard">DIFFICULT NUMBERS</option>`;
+                lessonSelect.value = 'num_easy';
+            } else {
+                lessonSelect.innerHTML = `<optgroup label="--- Lessons ---"><option value="lesson_home">Lesson 1: Home Row</option><option value="lesson_top">Lesson 2: Top Row</option><option value="lesson_bot">Lesson 3: Bottom Row</option></optgroup><optgroup label="--- Practice ---"><option value="normal">EASY TEXT</option><option value="medium">MEDIUM TEXT</option><option value="pro">DIFFICULT TEXT</option></optgroup>`;
+                lessonSelect.value = 'normal';
+            }
+            resetGame(); input.focus();
+        }
+
+        function shuffleArray(array) { let curId = array.length; while (0 !== curId) { let randId = Math.floor(Math.random() * curId); curId -= 1; let tmp = array[curId]; array[curId] = array[randId]; array[randId] = tmp; } return array; }
+        function getUniqueWords(count, difficulty) { let result = []; const bankToUse = wordBanks[difficulty] || wordBanks['normal']; if (wordQueue.length < count) { const freshBatch = shuffleArray([...bankToUse]); wordQueue = wordQueue.concat(freshBatch); } for(let i=0; i<count; i++) { if(wordQueue.length > 0) { result.push(wordQueue.shift()); } else { result.push(bankToUse[Math.floor(Math.random() * bankToUse.length)]); } } return result.join(" "); }
+
+        function setupTest() {
+            clearInterval(timer); isStarted = false; lockedLength = 0; input.value = ""; input.disabled = false; resultOverlay.style.display = 'none'; document.getElementById('text-wrapper').scrollLeft = 0;
+            timeLeft = parseInt(timeSelect.value); timerEl.innerText = timeLeft + "s";
+            const currentMode = lessonSelect.value; const bank = wordBanks[currentMode] || wordBanks['normal']; wordQueue = shuffleArray([...bank]); 
+            activeText = getUniqueWords(50, currentMode); renderText(); wpmEl.innerText = "0"; accEl.innerText = "100%";
+        }
+
+        function renderText() { display.innerHTML = ''; activeText.split('').forEach(char => { const span = document.createElement('span'); span.innerText = char; display.appendChild(span); }); }
+        function appendWords(count) { const newWords = " " + getUniqueWords(count, lessonSelect.value); activeText += newWords; newWords.split('').forEach(char => { const span = document.createElement('span'); span.innerText = char; display.appendChild(span); }); }
+
+        input.addEventListener('keydown', (e) => { if (e.key === 'Backspace') { if (input.selectionStart <= lockedLength) { e.preventDefault(); } } });
+        input.addEventListener('input', (e) => {
+            const spans = display.querySelectorAll('span'); const typedVal = input.value; const typedChars = typedVal.split('');
+            if (typedVal.length > lockedLength && typedVal.endsWith(" ")) { lockedLength = typedVal.length; }
+            if (!isStarted && typedVal.length > 0) { startCountdown(); isStarted = true; }
+            if (activeText.length - typedVal.length < 20) { appendWords(30); }
+            let mistakes = 0;
+            typedChars.forEach((char, index) => {
+                const span = spans[index];
+                if (span) { if (char === span.innerText) { span.className = 'char-correct'; } else { span.className = 'char-incorrect'; mistakes++; } }
+            });
+            for (let i = typedChars.length; i < spans.length; i++) { spans[i].className = ''; }
+            if(spans[typedChars.length]) { spans[typedChars.length].classList.add('char-current'); spans[typedChars.length].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); }
+            let acc = 0; if(typedChars.length > 0) { acc = Math.round(((typedChars.length - mistakes) / typedChars.length) * 100); }
+            accEl.innerText = (isNaN(acc) || acc < 0 ? 100 : acc) + "%";
+        });
+
+        function startCountdown() {
+            const initialTime = parseInt(timeSelect.value);
+            timer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--; timerEl.innerText = timeLeft + "s";
+                    const timePassed = initialTime - timeLeft;
+                    if (timePassed > 0) { const wordsTyped = input.value.length / 5; const wpm = Math.round(wordsTyped / (timePassed / 60)); wpmEl.innerText = wpm; }
+                } else { finishGame(); }
+            }, 1000);
+        }
+
+        function triggerConfetti() {
+            var duration = 3 * 1000; var animationEnd = Date.now() + duration; var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+            function randomInOut(min, max) { return Math.random() * (max - min) + min; }
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now(); if (timeLeft <= 0) { return clearInterval(interval); }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInOut(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInOut(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function finishGame() { clearInterval(timer); input.disabled = true; timerEl.innerText = "Done!"; resWpm.innerText = wpmEl.innerText; resAcc.innerText = accEl.innerText; resultOverlay.style.display = 'flex'; triggerConfetti(); }
+        function closeResults() { resetGame(); }
+        function resetGame() { setupTest(); }
+
+        function renderLeaderboard() {
+            const scores = JSON.parse(localStorage.getItem('proTypeScores')) || []; const tbody = document.getElementById('lb-body'); const emptyMsg = document.getElementById('lb-empty');
+            tbody.innerHTML = ''; scores.sort((a, b) => b.wpm - a.wpm);
+            if (scores.length === 0) { emptyMsg.style.display = 'block'; } else {
+                emptyMsg.style.display = 'none';
+                scores.slice(0, 10).forEach((score, index) => {
+                    const tr = document.createElement('tr'); tr.innerHTML = `<td>${index + 1}</td><td style="font-weight:bold">${score.name}</td><td>${score.wpm}</td><td>${score.acc}</td><td>${score.date}</td>`; tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function saveScore(name, wpm, acc) {
+            let scores = JSON.parse(localStorage.getItem('proTypeScores')) || [];
+            const existingIndex = scores.findIndex(s => s.name.toLowerCase() === name.toLowerCase());
+            if (existingIndex > -1) { if (parseInt(wpm) > scores[existingIndex].wpm) { scores[existingIndex] = { name: name, wpm: parseInt(wpm), acc: acc, date: new Date().toLocaleDateString() }; } } 
+            else { scores.push({ name: name, wpm: parseInt(wpm), acc: acc, date: new Date().toLocaleDateString() }); }
+            localStorage.setItem('proTypeScores', JSON.stringify(scores));
+        }
+
+        function downloadCertificate() {
+            const name = document.getElementById('cert-name').value; if(!name) { alert("Please enter your name!"); return; }
+            saveScore(name, resWpm.innerText, resAcc.innerText);
+            
+            const canvas = document.getElementById('certCanvas'); const ctx = canvas.getContext('2d');
+            const wpmVal = parseInt(resWpm.innerText); const accuracyVal = resAcc.innerText; const date = new Date().toLocaleDateString();
+
+            let borderColor = "#dc3545"; if(wpmVal >= 30) borderColor = "#007bff"; if(wpmVal >= 60) borderColor = "#28a745"; if(wpmVal >= 90) borderColor = "#ffc107"; 
+
+            ctx.fillStyle = "#fffdf5"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = borderColor; ctx.lineWidth = 15; ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.strokeRect(35, 35, canvas.width - 70, canvas.height - 70);
+
+            ctx.fillStyle = "#333"; ctx.textAlign = "center"; ctx.font = "bold 50px 'Poppins', sans-serif"; ctx.fillStyle = borderColor; ctx.fillText("CERTIFICATE", canvas.width / 2, 120);
+            ctx.font = "30px 'Poppins', sans-serif"; ctx.fillStyle = "#555"; ctx.fillText("OF COMPLETION", canvas.width / 2, 160);
+            ctx.textAlign = "left"; ctx.font = "bold 20px 'Fira Code', monospace"; ctx.fillStyle = "#333"; ctx.fillText("Name: " + name, 50, 80);
+            ctx.textAlign = "right"; ctx.fillText("Date: " + date, canvas.width - 50, 80);
+            ctx.textAlign = "center"; ctx.font = "bold 60px 'Fira Code', monospace"; ctx.fillStyle = "#222"; ctx.fillText(name, canvas.width / 2, 260);
+            ctx.beginPath(); ctx.moveTo(canvas.width / 2 - 200, 270); ctx.lineTo(canvas.width / 2 + 200, 270); ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.stroke();
+            const statsText = `Speed: ${wpmVal} WPM | Accuracy: ${accuracyVal}`; ctx.font = "bold 28px 'Poppins', sans-serif";
+            let textMetrics = ctx.measureText(statsText); let textWidth = textMetrics.width; let boxWidth = textWidth + 60; let boxX = (canvas.width - boxWidth) / 2;
+            ctx.fillStyle = borderColor + "20"; ctx.fillRect(boxX, 350, boxWidth, 60); ctx.strokeStyle = borderColor; ctx.strokeRect(boxX, 350, boxWidth, 60);
+            ctx.fillStyle = borderColor; ctx.fillText(statsText, canvas.width / 2, 390);
+            ctx.font = "bold 20px 'Poppins', sans-serif"; ctx.fillStyle = "#333"; ctx.textAlign = "center"; ctx.fillText("PROTYPIST - VERIFIED SCORE", canvas.width / 2, 530);
+
+            const link = document.createElement('a'); link.download = `ProTypist_Certificate_${name}.png`; link.href = canvas.toDataURL(); link.click();
+            showLeaderboard();
+        }
+
+        setupTest(); input.addEventListener('paste', e => e.preventDefault());
+    </script>
+</body>
+</html>
