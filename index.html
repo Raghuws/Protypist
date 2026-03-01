@@ -549,21 +549,19 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 ProTypist. Designed & Developed by <b>Bhukya Raghu</b>. All Rights Reserved.
+            &copy; 2026 ProTypist. Designed & Developed by <b>B.Raghu</b>. All Rights Reserved.
         </div>
     </footer>
 
-    <div id="result-overlay">
-        <div class="result-box">
-            <div class="result-title">Time's Up!</div>
-            <div class="result-msg">🎉 Congratulations! You smashed it! 🎉</div>
-            <div class="result-item">WPM: <b id="res-wpm">0</b></div>
-            <div class="result-item">Accuracy: <b id="res-acc">0%</b></div>
-            <div class="cert-input-area">
-                <label style="display:block; margin-bottom:5px; text-align:center;">Get Your Certificate & Save Score</label>
-                <input type="text" id="cert-name" placeholder="Enter Your Name">
-                <button class="btn-cert" onclick="downloadCertificate()">Download Certificate 🏅</button>
-            </div>
+    <div id="results-section">
+    <h2>Test Results</h2>
+    <p>WPM: <span id="wpm-display">0</span></p>
+    <p>Accuracy: <span id="accuracy-display">0%</span></p>
+    
+    <a href="మీ_స్మార్ట్‌లింక్_ఇక్కడ" target="_blank" class="download-btn" onclick="startDownload()">
+        Download Certificate
+    </a>
+</div>
             <button class="btn-restart" onclick="closeResults()">Try Again</button>
         </div>
     </div>
@@ -802,7 +800,14 @@
         function downloadCertificate() {
             const name = document.getElementById('cert-name').value; if(!name) { alert("Please enter your name!"); return; }
             saveScore(name, resWpm.innerText, resAcc.innerText);
-            
+
+        function startDownload() {
+    // యూజర్‌కి ఒక మెసేజ్ చూపించడానికి
+    alert("Your certificate is being generated. Please wait a moment...");
+    
+    // అసలు సర్టిఫికేట్ డౌన్‌లోడ్ అయ్యే లాజిక్ ఇక్కడ ఉంటుంది
+    // మీరు ఆల్రెడీ రాసిన డౌన్‌లోడ్ కోడ్‌ని ఇక్కడ కాల్ చేయవచ్చు.
+}    
             const canvas = document.getElementById('certCanvas'); const ctx = canvas.getContext('2d');
             const wpmVal = parseInt(resWpm.innerText); const accuracyVal = resAcc.innerText; const date = new Date().toLocaleDateString();
 
@@ -855,6 +860,7 @@
 </body>
 
 </html>
+
 
 
 
