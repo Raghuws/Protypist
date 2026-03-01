@@ -1,4 +1,4 @@
-F<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -72,7 +72,7 @@ F<!DOCTYPE html>
         }
         .lang-label {
             font-size: 0.75rem; 
-            font-weight: 300; /* Light Thin Font */
+            font-weight: 300;
             color: var(--secondary); 
             margin-bottom: 3px;
             letter-spacing: 0.5px;
@@ -91,11 +91,31 @@ F<!DOCTYPE html>
             white-space: nowrap; 
         }
 
+        /* --- ADSTERRA AD CONTAINER STYLES --- */
+        .ad-container {
+            width: 100%;
+            max-width: 728px; /* Standard leaderboard banner size */
+            margin: 20px auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90px;
+            background: rgba(0,0,0,0.02);
+            border: 1px dashed rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        /* Hide top ad on small mobiles to save space, or adjust size */
+        @media (max-width: 768px) {
+            .ad-container { min-height: 50px; margin: 10px auto; }
+        }
+
         /* --- HOME SECTION --- */
-        #home-section { margin-top: 120px; padding: 20px 5%; display: block; text-align: center; }
+        #home-section { margin-top: 100px; padding: 20px 5%; display: block; text-align: center; }
         
         .hero-container { 
-            max-width: 900px; margin: 0 auto 60px auto; 
+            max-width: 900px; margin: 0 auto 40px auto; 
             display: flex; flex-direction: column; align-items: center; 
         }
         
@@ -179,10 +199,9 @@ F<!DOCTYPE html>
             border-top-color: var(--primary);
         }
 
-        /* HEADER AUTO FIT STYLES */
         .desc-card h2 {
             color: var(--primary);
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Automatically resizes to fit container */
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); 
             margin-top: 0;
             margin-bottom: 15px;
             border-bottom: 1px solid #eee;
@@ -199,28 +218,10 @@ F<!DOCTYPE html>
             font-weight: 500;
         }
 
-        .desc-card ul {
-            padding-left: 20px;
-            list-style-type: none;
-        }
+        .desc-card ul { padding-left: 20px; list-style-type: none; }
+        .desc-card li { margin-bottom: 15px; color: #444; line-height: 1.6; position: relative; }
+        .desc-card li::before { content: '✓'; color: var(--correct); font-weight: bold; position: absolute; left: -25px; top: 2px; }
 
-        .desc-card li {
-            margin-bottom: 15px;
-            color: #444;
-            line-height: 1.6;
-            position: relative;
-        }
-
-        .desc-card li::before {
-            content: '✓';
-            color: var(--correct);
-            font-weight: bold;
-            position: absolute;
-            left: -25px;
-            top: 2px;
-        }
-
-        /* Mobile Responsive */
         @media (max-width: 900px) {
             .features-grid { grid-template-columns: 1fr; gap: 25px; row-gap: 30px; padding: 0 20px;}
             .seo-content-section { grid-template-columns: 1fr; padding: 0 20px; }
@@ -231,7 +232,6 @@ F<!DOCTYPE html>
             .desc-card { padding: 25px; }
         }
 
-        /* --- OTHER SECTIONS ... --- */
         #info-modal, #selection-modal, #result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .info-content, .modal-content, .result-box { background: white; padding: 40px; border-radius: 20px; text-align: left; animation: popUp 0.3s ease-out; position: relative; }
         .info-content { width: 600px; max-width: 90%; border-top: 6px solid var(--primary); }
@@ -248,9 +248,9 @@ F<!DOCTYPE html>
         .choice-btn h3 { margin: 10px 0 5px; color: var(--primary); }
         .choice-btn img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 10px; }
 
-        .container { display: none; position: relative; margin-top: 140px; margin-bottom: 50px; width: 90%; max-width: 900px; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.08); z-index: 5; align-self: center; }
+        .container { display: none; position: relative; margin-top: 30px; margin-bottom: 50px; width: 90%; max-width: 900px; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.08); z-index: 5; align-self: center; }
 
-        #leaderboard-section { display: none; margin-top: 140px; width: 90%; max-width: 800px; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); align-self: center; margin-bottom: 50px; }
+        #leaderboard-section { display: none; margin-top: 100px; width: 90%; max-width: 800px; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); align-self: center; margin-bottom: 50px; }
         .lb-title { font-size: 2.5rem; color: var(--primary); text-align: center; margin-bottom: 30px; }
         .lb-table { width: 100%; border-collapse: collapse; }
         .lb-table th { background: var(--primary); color: white; padding: 15px; text-align: left; border-radius: 8px 8px 0 0; }
@@ -292,52 +292,44 @@ F<!DOCTYPE html>
         .footer-section li::before { content: "•"; color: var(--primary); position: absolute; left: 0; font-size: 1.2rem; }
         .footer-bottom { margin-top: 40px; padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; font-size: 0.9rem; color: #777; background: rgba(0,0,0,0.02); }
 
-    /* --- Certificate Input Box Styles --- */
-.cert-input-area {
-    background: rgba(0, 123, 255, 0.05);
-    padding: 20px;
-    border-radius: 16px;
-    border: 2px dashed rgba(0, 123, 255, 0.3);
-    margin: 25px 0 20px 0;
-}
+        /* --- Certificate Input Box Styles --- */
+        .cert-input-area {
+            background: rgba(0, 123, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px dashed rgba(0, 123, 255, 0.3);
+            margin: 25px 0 20px 0;
+        }
 
-.cert-input-area label {
-    color: var(--primary);
-    font-size: 1.05rem;
-    margin-bottom: 15px !important;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
+        .cert-input-area label {
+            color: var(--primary);
+            font-size: 1.05rem;
+            margin-bottom: 15px !important;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-#cert-name {
-    width: 100%;
-    padding: 14px 20px;
-    font-size: 1.1rem;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    color: #333;
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 50px;
-    outline: none;
-    text-align: center;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
-}
+        #cert-name {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: #333;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
 
-#cert-name::placeholder {
-    color: #adb5bd;
-    font-weight: 400;
-}
-
-#cert-name:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.15), inset 0 2px 5px rgba(0,0,0,0.02);
-    transform: scale(1.02);
-}   
+        #cert-name::placeholder { color: #adb5bd; font-weight: 400; }
+        #cert-name:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 123, 255, 0.15), inset 0 2px 5px rgba(0,0,0,0.02); transform: scale(1.02); }   
     </style>
 </head>
 <body>
@@ -360,13 +352,17 @@ F<!DOCTYPE html>
         </div>
     </nav>
 
-    <div id="home-section">
+    <div style="margin-top: 100px;"></div>
+    <div class="ad-container" id="ad-top">
+        <small style="color:#aaa;">Advertisement</small>
+        </div>
+    <div id="home-section" style="margin-top: 20px;">
         <div class="hero-container">
             <div class="hero-text">
                 <h1 class="hero-title">Master Your <br> <span style="color:var(--primary)">Typing Skills</span></h1>
                 <p class="hero-desc">
                     ProTypist is the ultimate platform to improve your typing speed. 
-                    Practice with our <strong>Text Mode</strong> And <strong>Numbers Mode</strong> and get certified instantly!
+                    Practice with our <strong>Numbers Mode</strong> and get certified instantly!
                 </p>
                 <button class="cta-button" onclick="openSelectionModal()">Start Typing Test ⚡</button>
             </div>
@@ -497,6 +493,9 @@ F<!DOCTYPE html>
         <button class="btn-reset" onclick="resetGame()">RESET TEST</button>
     </div>
 
+    <div class="ad-container" id="ad-bottom">
+        <small style="color:#aaa;">Advertisement</small>
+        </div>
     <canvas id="certCanvas" width="800" height="600" style="display: none;"></canvas>
 
     <footer id="main-footer">
@@ -683,14 +682,16 @@ F<!DOCTYPE html>
         let timeLeft, timer = null, isStarted = false, activeText = "", lockedLength = 0, wordQueue = [];
         const display = document.getElementById('text-display'), input = document.getElementById('input-field'), timerEl = document.getElementById('timer'), wpmEl = document.getElementById('wpm'), accEl = document.getElementById('accuracy'), timeSelect = document.getElementById('time-limit'), lessonSelect = document.getElementById('lesson-type'), resultOverlay = document.getElementById('result-overlay'), resWpm = document.getElementById('res-wpm'), resAcc = document.getElementById('res-acc'), mainFooter = document.getElementById('main-footer');
 
-        function showHome() { document.getElementById('home-section').style.display = 'block'; mainFooter.style.display = 'block'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; }
-        function showLeaderboard() { document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'block'; renderLeaderboard(); }
+        function showHome() { document.getElementById('home-section').style.display = 'block'; mainFooter.style.display = 'block'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; document.getElementById('ad-top').style.display = 'flex'; document.getElementById('ad-bottom').style.display = 'flex'; }
+        function showLeaderboard() { document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('test-container').style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'block'; document.getElementById('ad-top').style.display = 'flex'; document.getElementById('ad-bottom').style.display = 'none'; renderLeaderboard(); }
         function openSelectionModal() { document.getElementById('selection-modal').style.display = 'flex'; }
         function closeSelectionModal() { document.getElementById('selection-modal').style.display = 'none'; }
         function confirmTest(type) { closeSelectionModal(); switchToTest(type); }
 
         function switchToTest(category) {
             document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; document.getElementById('test-container').style.display = 'block';
+            // Hide bottom ad while typing to prevent distraction/misclicks
+            document.getElementById('ad-bottom').style.display = 'none'; 
             if (category === 'numbers') {
                 lessonSelect.innerHTML = `<option value="num_easy">EASY NUMBERS</option><option value="num_medium">MEDIUM NUMBERS</option><option value="num_hard">DIFFICULT NUMBERS</option>`;
                 lessonSelect.value = 'num_easy';
@@ -792,13 +793,9 @@ F<!DOCTYPE html>
             ctx.fillStyle = "#333"; ctx.textAlign = "center"; ctx.font = "bold 50px 'Poppins', sans-serif"; ctx.fillStyle = borderColor; ctx.fillText("CERTIFICATE", canvas.width / 2, 120);
             ctx.font = "30px 'Poppins', sans-serif"; ctx.fillStyle = "#555"; ctx.fillText("OF COMPLETION", canvas.width / 2, 160);
             
-            // --- MODIFIED CODE START ---
-            
-            // 1. Top left 'PROTYPIST'
             ctx.textAlign = "left"; ctx.font = "bold 20px 'Fira Code', monospace"; ctx.fillStyle = "#333"; 
             ctx.fillText("PROTYPIST", 50, 80);
 
-            // 2. Date with underline
             ctx.textAlign = "right"; 
             let dateText = "Date: " + date;
             ctx.fillText(dateText, canvas.width - 50, 80);
@@ -810,7 +807,6 @@ F<!DOCTYPE html>
             ctx.lineWidth = 2; 
             ctx.stroke();
 
-            // 3. User Name with matching underline
             ctx.textAlign = "center"; ctx.font = "bold 60px 'Fira Code', monospace"; ctx.fillStyle = "#222"; 
             ctx.fillText(name, canvas.width / 2, 260);
             
@@ -821,8 +817,6 @@ F<!DOCTYPE html>
             ctx.strokeStyle = "#333"; 
             ctx.lineWidth = 2; 
             ctx.stroke();
-            
-            // --- MODIFIED CODE END ---
 
             const statsText = `Speed: ${wpmVal} WPM | Accuracy: ${accuracyVal}`; ctx.font = "bold 28px 'Poppins', sans-serif";
             let textMetrics = ctx.measureText(statsText); let textWidth = textMetrics.width; let boxWidth = textWidth + 60; let boxX = (canvas.width - boxWidth) / 2;
@@ -839,5 +833,3 @@ F<!DOCTYPE html>
 </body>
 
 </html>
-
-
