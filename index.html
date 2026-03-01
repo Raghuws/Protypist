@@ -709,18 +709,40 @@
         function confirmTest(type) { closeSelectionModal(); switchToTest(type); }
 
         function switchToTest(category) {
-            document.getElementById('home-section').style.display = 'none'; mainFooter.style.display = 'none'; document.getElementById('leaderboard-section').style.display = 'none'; document.getElementById('test-container').style.display = 'block';
-            // Hide bottom ad while typing to prevent distraction/misclicks
-            document.getElementById('ad-bottom').style.display = 'none'; 
-            if (category === 'numbers') {
-                lessonSelect.innerHTML = `<option value="num_easy">EASY NUMBERS</option><option value="num_medium">MEDIUM NUMBERS</option><option value="num_hard">DIFFICULT NUMBERS</option>`;
-                lessonSelect.value = 'num_easy';
-            } else {
-                lessonSelect.innerHTML = `<optgroup label="--- Lessons ---"><option value="lesson_home">Lesson 1: Home Row</option><option value="lesson_top">Lesson 2: Top Row</option><option value="lesson_bot">Lesson 3: Bottom Row</option></optgroup><optgroup label="--- Practice ---"><option value="normal">EASY TEXT</option><option value="medium">MEDIUM TEXT</option><option value="pro">DIFFICULT TEXT</option></optgroup>`;
-                lessonSelect.value = 'normal';
-            }
-            resetGame(); input.focus();
-        }
+    document.getElementById('home-section').style.display = 'none';
+    mainFooter.style.display = 'none';
+    document.getElementById('leaderboard-section').style.display = 'none';
+    document.getElementById('test-container').style.display = 'block';
+    document.getElementById('ad-top').style.display = 'flex';
+    
+    const lessonSelect = document.getElementById('lesson-type');
+    
+    if (category === 'numbers') {
+        // నంబర్ మోడ్ ఆప్షన్స్ లోడ్ అవుతాయి
+        lessonSelect.innerHTML = `
+            <option value="num_easy">EASY NUMBERS</option>
+            <option value="num_medium">MEDIUM NUMBERS</option>
+            <option value="num_hard">DIFFICULT NUMBERS</option>`;
+        lessonSelect.value = 'num_easy';
+    } else {
+        // టెక్స్ట్ మోడ్ ఆప్షన్స్ లోడ్ అవుతాయి
+        lessonSelect.innerHTML = `
+            <optgroup label="--- Lessons ---">
+                <option value="lesson_home">Lesson 1: Home Row</option>
+                <option value="lesson_top">Lesson 2: Top Row</option>
+                <option value="lesson_bot">Lesson 3: Bottom Row</option>
+            </optgroup>
+            <optgroup label="--- Practice ---">
+                <option value="normal">EASY TEXT</option>
+                <option value="medium">MEDIUM TEXT</option>
+                <option value="pro">DIFFICULT TEXT</option>
+            </optgroup>`;
+        lessonSelect.value = 'normal';
+    }
+    
+    resetGame(); // ఇది కొత్త పదాలను లోడ్ చేస్తుంది
+    setTimeout(() => input.focus(), 100); // ఇన్‌పుట్ బాక్స్ మీద ఫోకస్ చేస్తుంది
+}
 
         function shuffleArray(array) { let curId = array.length; while (0 !== curId) { let randId = Math.floor(Math.random() * curId); curId -= 1; let tmp = array[curId]; array[curId] = array[randId]; array[randId] = tmp; } return array; }
         function getUniqueWords(count, difficulty) { let result = []; const bankToUse = wordBanks[difficulty] || wordBanks['normal']; if (wordQueue.length < count) { const freshBatch = shuffleArray([...bankToUse]); wordQueue = wordQueue.concat(freshBatch); } for(let i=0; i<count; i++) { if(wordQueue.length > 0) { result.push(wordQueue.shift()); } else { result.push(bankToUse[Math.floor(Math.random() * bankToUse.length)]); } } return result.join(" "); }
@@ -860,6 +882,7 @@
 </body>
 
 </html>
+
 
 
 
