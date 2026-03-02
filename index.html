@@ -293,51 +293,90 @@
         .footer-bottom { margin-top: 40px; padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; font-size: 0.9rem; color: #777; background: rgba(0,0,0,0.02); }
 
     /* --- Certificate Input Box Styles --- */
-.cert-input-area {
-    background: rgba(0, 123, 255, 0.05);
-    padding: 20px;
-    border-radius: 16px;
-    border: 2px dashed rgba(0, 123, 255, 0.3);
-    margin: 25px 0 20px 0;
-}
+    .cert-input-area {
+        background: rgba(0, 123, 255, 0.05);
+        padding: 20px;
+        border-radius: 16px;
+        border: 2px dashed rgba(0, 123, 255, 0.3);
+        margin: 25px 0 20px 0;
+    }
 
-.cert-input-area label {
-    color: var(--primary);
-    font-size: 1.05rem;
-    margin-bottom: 15px !important;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
+    .cert-input-area label {
+        color: var(--primary);
+        font-size: 1.05rem;
+        margin-bottom: 15px !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
 
-#cert-name {
-    width: 100%;
-    padding: 14px 20px;
-    font-size: 1.1rem;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    color: #333;
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 50px;
-    outline: none;
-    text-align: center;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
-}
+    #cert-name {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1.1rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        color: #333;
+        background: #ffffff;
+        border: 2px solid #e0e0e0;
+        border-radius: 50px;
+        outline: none;
+        text-align: center;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+    }
 
-#cert-name::placeholder {
-    color: #adb5bd;
-    font-weight: 400;
-}
+    #cert-name::placeholder {
+        color: #adb5bd;
+        font-weight: 400;
+    }
 
-#cert-name:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.15), inset 0 2px 5px rgba(0,0,0,0.02);
-    transform: scale(1.02);
-}   
+    #cert-name:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.15), inset 0 2px 5px rgba(0,0,0,0.02);
+        transform: scale(1.02);
+    }   
+
+        /* =========================================
+           KOTTAGA ADD CHESINA ADS CSS STYLES
+           ========================================= */
+        .ad-box-top {
+            margin: 100px auto 10px auto; /* నావిగేషన్ బార్ కింద కరెక్ట్ గా ఉండటానికి */
+            text-align: center;
+            max-width: 728px;
+            background: rgba(0, 123, 255, 0.05);
+            border: 1px dashed rgba(0, 123, 255, 0.3);
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .ad-box-bottom {
+            margin: 20px auto 30px auto; /* ఫుట్టర్ కి పైన ఉండటానికి */
+            text-align: center;
+            max-width: 728px;
+            background: rgba(0, 123, 255, 0.05);
+            border: 1px dashed rgba(0, 123, 255, 0.3);
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .ad-label {
+            font-size: 11px;
+            color: #888;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -359,6 +398,19 @@
             </div>
         </div>
     </nav>
+
+    <div class="ad-box-top">
+        <span class="ad-label"><script>
+  atOptions = {
+    'key' : 'bdd07d3b7fa1576931bb39175f15fa72',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/bdd07d3b7fa1576931bb39175f15fa72/invoke.js"></script></span>
+    </div>
 
     <div id="home-section">
         <div class="hero-container">
@@ -498,6 +550,19 @@
     </div>
 
     <canvas id="certCanvas" width="800" height="600" style="display: none;"></canvas>
+
+    <div class="ad-box-bottom">
+        <span class="ad-label"><script>
+  atOptions = {
+    'key' : 'bdd07d3b7fa1576931bb39175f15fa72',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/bdd07d3b7fa1576931bb39175f15fa72/invoke.js"></script></span>
+    </div>
 
     <footer id="main-footer">
         <div id="footer-details">
@@ -777,7 +842,15 @@
         }
 
         function downloadCertificate() {
-            const name = document.getElementById('cert-name').value; if(!name) { alert("Please enter your name!"); return; }
+            const name = document.getElementById('cert-name').value; 
+            if(!name) { alert("Please enter your name!"); return; }
+            
+            // =======================================================
+            // ADSTERRA DIRECT LINK CODE (ఇక్కడ మీ లింక్ పెట్టండి)
+            // =======================================================
+            window.open('https://www.effectivegatecpm.com/bxqrj7sw0j?key=714f61bf45e53e06e350ed20a5493674', '_blank');
+            // =======================================================
+
             saveScore(name, resWpm.innerText, resAcc.innerText);
             
             const canvas = document.getElementById('certCanvas'); const ctx = canvas.getContext('2d');
@@ -791,8 +864,6 @@
 
             ctx.fillStyle = "#333"; ctx.textAlign = "center"; ctx.font = "bold 50px 'Poppins', sans-serif"; ctx.fillStyle = borderColor; ctx.fillText("CERTIFICATE", canvas.width / 2, 120);
             ctx.font = "30px 'Poppins', sans-serif"; ctx.fillStyle = "#555"; ctx.fillText("OF COMPLETION", canvas.width / 2, 160);
-            
-            // --- MODIFIED CODE START ---
             
             // 1. Top left 'PROTYPIST'
             ctx.textAlign = "left"; ctx.font = "bold 20px 'Fira Code', monospace"; ctx.fillStyle = "#333"; 
@@ -821,8 +892,6 @@
             ctx.strokeStyle = "#333"; 
             ctx.lineWidth = 2; 
             ctx.stroke();
-            
-            // --- MODIFIED CODE END ---
 
             const statsText = `Speed: ${wpmVal} WPM | Accuracy: ${accuracyVal}`; ctx.font = "bold 28px 'Poppins', sans-serif";
             let textMetrics = ctx.measureText(statsText); let textWidth = textMetrics.width; let boxWidth = textWidth + 60; let boxX = (canvas.width - boxWidth) / 2;
@@ -837,5 +906,4 @@
         setupTest(); input.addEventListener('paste', e => e.preventDefault());
     </script>
 </body>
-
 </html>
